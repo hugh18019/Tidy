@@ -49,42 +49,41 @@ export const StyleWrapper = styled.div`
 `;
 
 function Contacts() {
+  // Use react global state
   const [state, dispatch] = useAccountContext();
 
   const classes = useStyles();
 
+  // Get the data of all registered users from the backend
   const { loading, data } = useQuery(QUERY_USERS);
+
+  // Extract all registered users from data
   const users = data?.users || [];
 
-  console.log("users", users);
-
-  const { me } = useQuery(QUERY_ME).data;
-  const current_user = me;
-
-  console.log("current_user", current_user);
-
+  // Get the currently logged in user from the backend
+  const current_user = useQuery(QUERY_ME).data.me;
 
   const [addContact, { error }] = useMutation(ADD_CONTACT);
 
   const handleAddContact = async (username) => {
     try {
 
+      // If the contact a user is trying to add is not added yet
+      // add the contact, update the database and the global state
       if(!current_user.contacts.includes(username))
       {
+        // add the contact to the database
         const { data } = await addContact({
           variables: { username },
         });
 
         const user = data?.addContact || {};
 
-        if (user.contacts.length == state.current_user.contacts.length)
-          alert("The user is already in your contact list!");
-        else {
-          dispatch({
-            type: UPDATE_CURRENT_USER,
-            current_user: user,
-          });
-        }
+        // add the contact to global state
+        dispatch({
+          type: UPDATE_CURRENT_USER,
+          current_user: user,
+        });
       }
       else
       {

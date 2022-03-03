@@ -242,7 +242,7 @@ const resolvers = {
 
         const user = await User.findOne({ _id: context.user._id });
         await user.events.push(event._id);
-        
+
         user.save();
 
         return event.save();
@@ -255,9 +255,7 @@ const resolvers = {
       if (context.user) {
         const user = await User.findOne({ _id: context.user._id });
 
-        if (username != user.username && !username in user.contacts) {
-          await user.contacts.push(username);
-        }
+        await user.contacts.push(username);
           
         console.log('contact', user);
         return user.save();
