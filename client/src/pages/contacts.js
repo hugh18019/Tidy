@@ -61,7 +61,9 @@ function Contacts() {
   const users = data?.users || [];
 
   // Get the currently logged in user from the backend
-  const current_user = useQuery(QUERY_ME).data.me;
+  const {me} = useQuery(QUERY_ME).data;
+
+  const current_user = me;
 
   const [addContact, { error }] = useMutation(ADD_CONTACT);
 
