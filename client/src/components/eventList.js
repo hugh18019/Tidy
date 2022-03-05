@@ -55,7 +55,7 @@ const EventList = ({ event, title }) => {
                       <ListItemIcon>
                         <AssignmentIcon />
                       </ListItemIcon>
-                      <ListItemText primary='Starred' primary={event.content} />
+                      <ListItemText primary={event.content} />
                     </ListItem>
                   </div>
                 </Card>

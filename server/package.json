@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js --ignore client",
     "watch": "nodemon",
     "seed": "node seeders/seed.js"
   },
@@ -11,18 +11,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^2.12.0",
-    "bcrypt": "^5.0.0",
-    "config": "^3.3.6",
-    "express": "^4.17.1",
-    "graphql": "^15.5.2",
-    "graphql-compose": "^9.0.2",
-    "graphql-upload": "^12.0.0",
+    "apollo-server-express": "^3.6.3",
+    "bcrypt": "^5.0.1",
+    "config": "^3.3.7",
+    "express": "^4.17.3",
+    "graphql": "^16.3.0",
+    "graphql-compose": "^9.0.7",
+    "graphql-upload": "^13.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.9"
+    "mongoose": "^6.2.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.15"
   },
   "description": ""
 }

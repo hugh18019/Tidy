@@ -8,7 +8,9 @@ const resolvers = {
   // * successful query of user data
   Query: {
     users: async () => {
-      return User.find();
+      const users = User.find();
+      console.log('users', users);
+      return users;
     },
     user: async (parent, { username }) => {
       return User.findOne({ username });
@@ -74,12 +76,11 @@ const resolvers = {
       console.log('context.user', context.user);
 
       if (context.user) {
-        // return user.findOne({ _id: context.user._id }).populate('');
+
         const userData = User.findOne({
           username: context.user.username,
         }).populate('events');
-        // const user = userData.user;
-        // console.log('userData', userData);
+
         return userData;
       }
       throw new AuthenticationError('You need to be logged in!');

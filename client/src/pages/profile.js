@@ -8,8 +8,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Profile from '../components/profile';
 
-import { useAccountContext } from '../utils/GlobalState';
-
 import Auth from '../utils/auth';
 import styled from '@emotion/styled';
 // import styles
@@ -53,18 +51,13 @@ export const StyleWrapper = styled.div`
 function ToDos() {
   const classes = useStyles();
 
-  const [state, dispatch] = useAccountContext();
-
   const { loading, data } = useQuery(QUERY_ME);
   const user = data?.me || {};
 
   // Successfully logs user data from database
-  console.log('user', user);
+  // console.log('user', user);
 
-  console.log("Fetched current user on re-render");
-
-  // const { current_user } = state;
-
+  // console.log("Fetched current user on re-render");
 
   return (
     <main>

@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+// import { useReducer } from 'react';
 import {
   UPDATE_TASKS,
   ADD_TASK,
@@ -10,10 +10,26 @@ import {
   UPDATE_CURRENT_CATEGORY,
   UPDATE_ACCOUNT_STATUS,
   UPDATE_ACCOUNT_NAME,
+  UPDATE_LOGIN_STATUS
 } from './actions';
 
-export const reducer = (state, action) => {
+var initState = {
+  isLoggedIn: false,
+  username: 'admin',
+  tasks_current_user: [],
+  contacts_current_user: [],
+  current_user: {}
+}
+
+export const reducer = (state = initState, action) => {
   switch (action.type) {
+
+    case UPDATE_LOGIN_STATUS:
+      return {
+        ...state,
+        isLoggedIn: action.isLoggedIn,
+      };
+
     case UPDATE_TASKS:
       return {
         ...state,
@@ -41,6 +57,10 @@ export const reducer = (state, action) => {
         contacts_current_user: [...action.contacts_current_user],
       };
     case UPDATE_CURRENT_USER:
+      
+      console.log(action.current_user);
+      alert(action.current_user.username);
+
       return {
         ...state,
         current_user: action.current_user
@@ -58,10 +78,9 @@ export const reducer = (state, action) => {
         userName: action.userName,
       };
     default:
+      console.log('Hit default case');
       return state;
   }
 };
 
-export function useAccountReducer(initialState) {
-  return useReducer(reducer, initialState);
-}
+export default reducer;

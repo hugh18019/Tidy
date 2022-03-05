@@ -6,7 +6,7 @@ import {
   ApolloProvider,
   createHttpLink,
 } from '@apollo/client';
-import { AccountProvider } from './utils/GlobalState';
+
 import { setContext } from '@apollo/client/link/context';
 // import { createBrowserHistory } from 'history';
 import { Routes, Route } from 'react-router-dom';
@@ -27,7 +27,6 @@ import PolishNav from './components/PolishNav';
 import Dashboard from './pages/dashboard.js';
 import NoMatch from './pages/NoMatch';
 import Tests from './pages/testPage';
-import { ChakraProvider } from '@chakra-ui/react';
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -55,8 +54,6 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-        {/* <div> */}
-          <AccountProvider>
             <PolishNav />
             <Routes>
               <Route exact path='/dashboard' element={<Dashboard />} />
@@ -77,8 +74,6 @@ function App() {
               <Route exact path='/' element={<Landing />} />
               <Route component={NoMatch} />
             </Routes>
-          </AccountProvider>
-        {/* </div> */}
     </ApolloProvider>
   );
 }

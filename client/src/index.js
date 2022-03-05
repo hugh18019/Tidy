@@ -7,14 +7,22 @@ import reportWebVitals from './reportWebVitals';
 import theme from './theme';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducer from './utils/reducers';
+
+const store = createStore(reducer);
+
 // App2.js is used
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </Router>
+      <Provider store={store}>
+        <Router>
+          <ThemeProvider theme={theme}>
+              <App />
+          </ThemeProvider>
+        </Router>
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  scalar FileUpload
+
   type Message {
     _id: ID
     date: String
@@ -95,7 +97,7 @@ const typeDefs = gql`
 
     removeEvent(_id: ID!): workEvent
     login(email: String!, password: String!): Auth
-    fileUpload(file: Upload!): File!
+    fileUpload(file: FileUpload!): File!
   }
 `;
 

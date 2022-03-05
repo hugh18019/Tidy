@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+
+import Alert from '@material-ui/lab/Alert';
 import { Typography, Container, Paper, Button, Card } from '@material-ui/core';
 import styled from '@emotion/styled';
 
@@ -8,7 +10,7 @@ import { QUERY_MESSAGES, QUERY_USERS, QUERY_ME } from '../utils/queries';
 import ContactList from '../components/contactList';
 import { ADD_CONTACT } from '../utils/mutations';
 
-import { useAccountContext } from '../utils/GlobalState';
+import { useSelector, useDispatch } from 'react-redux';
 
 // import styles
 import useStyles from './styles';
@@ -49,8 +51,8 @@ export const StyleWrapper = styled.div`
 `;
 
 function Contacts() {
-  // Use react global state
-  const [state, dispatch] = useAccountContext();
+
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -59,13 +61,26 @@ function Contacts() {
 
   // Extract all registered users from data
   const users = data?.users || [];
+  console.log('users', users);
 
-  // Get the currently logged in user from the backend
-  const {me} = useQuery(QUERY_ME).data;
-
-  const current_user = me;
+  const current_user_data = useQuery(QUERY_ME).data;
 
   const [addContact, { error }] = useMutation(ADD_CONTACT);
+
+  if (!current_user_data)
+    return (
+      <StyleWrapper>
+        <Card className={classes.card} id='cardStyle'>
+          <Typography variant='h5'>
+            <div id='namesCard'>
+              <h3 style={{ textAlign: "center"}}>Please login</h3>
+            </div>
+          </Typography>
+        </Card>
+      </StyleWrapper>
+    )
+  
+  const current_user = current_user_data.me;
 
   const handleAddContact = async (username) => {
     try {
@@ -133,6 +148,10 @@ function Contacts() {
         </Container>
       </StyleWrapper>
     </main>
+  );
+
+  return (
+    <div>current_user.username</div>
   );
 }
 

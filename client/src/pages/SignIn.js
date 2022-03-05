@@ -16,6 +16,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_LOGIN_STATUS } from '../utils/actions';
+
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
@@ -50,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn(props) {
+
+  const dispatch = useDispatch();
+
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [SignIn, { error, data }] = useMutation(LOGIN_USER);
   const classes = useStyles();
@@ -72,11 +78,21 @@ export default function SignIn(props) {
       });
 
       Auth.login(data.login.token);
+
+      const user = await data.login.user;
+
+      console.log('user', user);
+
+      dispatch({
+        type: UPDATE_LOGIN_STATUS,
+        isLoggedIn: true,
+      })
+
     } catch (error) {
       console.error(error);
     }
-
     setFormState({ email: '', password: '' });
+
   };
 
   return (
