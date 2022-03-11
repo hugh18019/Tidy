@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Card,
@@ -16,48 +16,64 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import { useQuery, useMutation } from '@apollo/client';
 import { ADD_CONTACT } from '../utils/mutations';
-import { ADD_CONTACTS, UPDATE_CONTACTS, UPDATE_CURRENT_USER } from '../utils/actions';
+import { ADD_CONTACTS, UPDATE_CONTACTS, UPDATE_CURRENT_USER, UPDATE_SHOW_ALERT } from '../utils/actions';
 import { useSelector, useDispatch } from 'react-redux';
+
+import AlertBox from '../components/Alert/alert';
 
 const ContactList = ({ contact }) => {
 
-  // const dispatch = useDispatch();
-  // const [addContact, { error }] = useMutation(ADD_CONTACT);
+  const dispatch = useDispatch();
+  const showAlert = useSelector((state) => state.showAlert);
 
-  // const handleAddContact = async (username) => {
-  //   try {
+  const [addContact, { error }] = useMutation(ADD_CONTACT);
 
-  //     // If the contact a user is trying to add is not added yet
-  //     // add the contact, update the database and the global state
-  //     if(!current_user.contacts.includes(username))
-  //     {
-  //       // add the contact to the database
-  //       const { data } = await addContact({
-  //         variables: { username },
-  //       });
+  const current_user = useSelector((state) => state.current_user);
 
-  //       const user = data?.addContact || {};
+  const handleAddContact = async (username) => {
 
-  //       // add the contact to global state
-  //       dispatch({
-  //         type: UPDATE_CURRENT_USER,
-  //         current_user: user,
-  //       });
-  //     }
-  //     else
-  //     {
-  //       alert("This person is already in your contact list!");
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+    console.log('Called handleAddContact');
 
+    try {
+
+      // If the contact a user is trying to add is not added yet
+      // add the contact, update the database and the global state
+      if(!current_user.contacts.includes(username))
+      {
+        // add the contact to the database
+        const { data } = await addContact({
+          variables: { username },
+        });
+
+        const user = data?.addContact || {};
+
+        // add the contact to global state
+        dispatch({
+          type: UPDATE_CURRENT_USER,
+          current_user: user,
+        });
+
+        dispatch({
+          type: UPDATE_SHOW_ALERT,
+          showAlert: false
+        })
+      }
+      else
+      {
+        dispatch({
+          type: UPDATE_SHOW_ALERT,
+          showAlert: true
+        })
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <CssBaseline>
       <div>
-        {/* <h3 className='text-primary'>{title}</h3> */}
+        {showAlert && <AlertBox />}
         <div className="flex-row justify-space-between my-4">
           <div key={contact.username} className="col-12 col-xl-6">
             <Container>
@@ -88,6 +104,16 @@ const ContactList = ({ contact }) => {
                   </div>
                 </Card>
               </List>
+              <Button>
+                <button
+                  onClick={handleAddContact.bind(
+                    null,
+                    contact.username
+                  )}
+                >
+                  Add to contacts
+                </button>
+              </Button>
             </Container>
           </div>
         </div>

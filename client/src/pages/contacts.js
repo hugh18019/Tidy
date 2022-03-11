@@ -1,20 +1,18 @@
 import React, {useState, useEffect} from 'react';
 
-import Alert from '@material-ui/lab/Alert';
+// import styles
+import useStyles from './styles';
 import { Typography, Container, Paper, Button, Card } from '@material-ui/core';
 import styled from '@emotion/styled';
 
 import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_MESSAGES, QUERY_USERS, QUERY_ME } from '../utils/queries';
+import { ADD_CONTACT } from '../utils/mutations';
+import { useSelector, useDispatch } from 'react-redux';
+import { ADD_CONTACTS, UPDATE_CONTACTS, UPDATE_CURRENT_USER } from '../utils/actions';
 
 import ContactList from '../components/contactList';
-import { ADD_CONTACT } from '../utils/mutations';
-
-import { useSelector, useDispatch } from 'react-redux';
-
-// import styles
-import useStyles from './styles';
-import { ADD_CONTACTS, UPDATE_CONTACTS, UPDATE_CURRENT_USER } from '../utils/actions';
+import AlertBox from '../components/Alert/alert';
 
 export const StyleWrapper = styled.div`
   #cardStyle {
@@ -61,11 +59,9 @@ function Contacts() {
 
   // Extract all registered users from data
   const users = data?.users || [];
-  console.log('users', users);
 
+  // Get the currently logged in user
   const current_user_data = useQuery(QUERY_ME).data;
-
-  const [addContact, { error }] = useMutation(ADD_CONTACT);
 
   if (!current_user_data)
     return (
@@ -79,80 +75,43 @@ function Contacts() {
         </Card>
       </StyleWrapper>
     )
-  
-  const current_user = current_user_data.me;
+  else {
+    const current_user = current_user_data.me;
 
-  const handleAddContact = async (username) => {
-    try {
+    dispatch({
+      type: UPDATE_CURRENT_USER,
+      current_user: current_user
+    })
 
-      // If the contact a user is trying to add is not added yet
-      // add the contact, update the database and the global state
-      if(!current_user.contacts.includes(username))
-      {
-        // add the contact to the database
-        const { data } = await addContact({
-          variables: { username },
-        });
-
-        const user = data?.addContact || {};
-
-        // add the contact to global state
-        dispatch({
-          type: UPDATE_CURRENT_USER,
-          current_user: user,
-        });
-      }
-      else
-      {
-        alert("This person is already in your contact list!");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  return (
-    <main>
-      <StyleWrapper>
-        <Container>
-          <div className='flex-row justify-center'>
-            <Paper id='paperStyle'>
-              <div className='col-12 col-md-10 my-3'>
-                {loading ? (
-                  <div>Loading...</div>
-                ) : (
-                  users.map((user) => (
-                    <Card className={classes.card} id='cardStyle'>
-                      <Typography variant='h5'>
-                        <div id='namesCard'>
-                          <ContactList contact={user} />
-                          {/* null is passed as the first argument to bind, which sets the scope of the handleJoinEvent function to the current page. This is how event._id is passed to the function as an argument. */}
-                          <Button>
-                            <button
-                              onClick={handleAddContact.bind(
-                                null,
-                                user.username
-                              )}
-                            >
-                              Add to contacts
-                            </button>
-                          </Button>
-                        </div>
-                      </Typography>
-                    </Card>
-                  ))
-                )}
-              </div>
-            </Paper>
-          </div>
-        </Container>
-      </StyleWrapper>
-    </main>
-  );
-
-  return (
-    <div>current_user.username</div>
-  );
+    return (
+      <main>
+        <StyleWrapper>
+          <Container>
+            <div className='flex-row justify-center'>
+              <Paper id='paperStyle'>
+                <div className='col-12 col-md-10 my-3'>
+                  {loading ? (
+                    <div>Loading...</div>
+                  ) : (
+                    users.map((user) => (
+                      <Card className={classes.card} id='cardStyle'>
+                        <Typography variant='h5'>
+                          <div id='namesCard'>
+                            <ContactList contact={user} />
+                            {/* null is passed as the first argument to bind, which sets the scope of the handleJoinEvent function to the current page. This is how event._id is passed to the function as an argument. */}
+                          </div>
+                        </Typography>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </Paper>
+            </div>
+          </Container>
+        </StyleWrapper>
+      </main>
+    );
+  }
 }
 
 export default Contacts;

@@ -10,7 +10,8 @@ import {
   UPDATE_CURRENT_CATEGORY,
   UPDATE_ACCOUNT_STATUS,
   UPDATE_ACCOUNT_NAME,
-  UPDATE_LOGIN_STATUS
+  UPDATE_LOGIN_STATUS,
+  UPDATE_SHOW_ALERT
 } from './actions';
 
 var initState = {
@@ -18,7 +19,8 @@ var initState = {
   username: 'admin',
   tasks_current_user: [],
   contacts_current_user: [],
-  current_user: {}
+  current_user: {},
+  showAlert: false
 }
 
 export const reducer = (state = initState, action) => {
@@ -59,7 +61,6 @@ export const reducer = (state = initState, action) => {
     case UPDATE_CURRENT_USER:
       
       console.log(action.current_user);
-      alert(action.current_user.username);
 
       return {
         ...state,
@@ -77,6 +78,11 @@ export const reducer = (state = initState, action) => {
         ...state,
         userName: action.userName,
       };
+    case UPDATE_SHOW_ALERT:
+      return {
+        ...state,
+        showAlert: action.showAlert
+      }
     default:
       console.log('Hit default case');
       return state;
